@@ -16,6 +16,10 @@ module Gumroad
       delete('/sessions')
     end
 
+    def put(path, params)
+      self.class.put(path, body: params)
+    end
+
     def post(path, params)
       self.class.post(path, body: params)
     end

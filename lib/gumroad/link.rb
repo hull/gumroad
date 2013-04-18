@@ -18,7 +18,7 @@ module Gumroad
       :custom_product_type
     ]
 
-    attr_accessor LinkAttributes
+    attr_accessor *LinkAttributes
     
     def initialize(session, json)
       @session = session
@@ -28,13 +28,21 @@ module Gumroad
     end
 
     def save
-      params = LinkAttributes.inject({}) { |prms, p| prms.merge(p => send(p)) }
-      @session.post("/links", params)
+      if @id
+        @session.put("/links/#{@id}", attributes)
+      else
+        @session.post("/links", attributes)
+      end
       self
     end
 
     def destroy
       @session.delete("/links/#{id}")
     end
+
+    def attributes
+      LinkAttributes.inject({}) { |prms, p| prms.merge(p => send(p)) }
+    end
+
   end
 end
